@@ -5,7 +5,7 @@
 #   Website - https://github.com/gorniak/DigiTool
 """Digitize curves from a raster chart image into CSV data points.
 
-Command line port of digi.html (DigiTool web app): the same digitizing
+Command line port of digitool.html (DigiTool web app): the same digitizing
 engine, axis / label OCR, CSV, JSON and plot outputs, in a single file.
 
 For an image "bjt_chart.png" the configuration is read from "bjt_chart.json"
@@ -26,10 +26,10 @@ Requires numpy and Pillow; matplotlib for the plot; pytesseract or the
 tesseract command line tool for OCR; scipy (optional) for speed.
 
 Examples:
-  python digi.py bjt_chart.png
-  python digi.py bjt_chart.png --pick 400 492 cold --pick 400 668 room \
+  python digitool.py bjt_chart.png
+  python digitool.py bjt_chart.png --pick 400 492 cold --pick 400 668 room \
                                --pick 400 964 hot
-  python digi.py bjt_chart.png --ocr --save-config --zip
+  python digitool.py bjt_chart.png --ocr --save-config --zip
 """
 
 import argparse
@@ -50,7 +50,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 # ============================================================================
-# Configuration defaults & constants (as in digi.html)
+# Configuration defaults & constants (as in digitool.html)
 # ============================================================================
 
 DEFAULTS = {
@@ -101,7 +101,7 @@ PICK_TOLERANCE = 30
 # Core digitizing engine
 # ============================================================================
 
-# Round half to even (Python round, as pyRound in digi.html)
+# Round half to even (Python round, as pyRound in digitool.html)
 def py_round(x):
     return int(round(x))
 
@@ -704,7 +704,7 @@ def scale_points(raw, crop_w, crop_h, cfg):
     return sx, sy
 
 
-# Number as %.16g (CSV format of digi.html)
+# Number as %.16g (CSV format of digitool.html)
 def fmt_g16(v):
     v = float(v)
     if not math.isfinite(v):
@@ -792,7 +792,7 @@ def js_json(value):
     return json.dumps(value)
 
 
-# JSON text formatted as digi.html (one key per line, one colored trace
+# JSON text formatted as digitool.html (one key per line, one colored trace
 # per line)
 def serialize_config(cfg):
     lines = []
@@ -1337,7 +1337,7 @@ def detect_axes(image, box):
 def main(argv=None):
     parser = argparse.ArgumentParser(
         description="Digitize curves from a chart image into CSV data "
-                    "(command line version of digi.html).")
+                    "(command line version of digitool.html).")
     parser.add_argument("image", help="chart image (PNG, JPG, ...)")
     parser.add_argument("--config", help="JSON configuration "
                                          "(default: <image stem>.json)")
@@ -1363,7 +1363,7 @@ def main(argv=None):
                         help="write <stem>.json even if it exists")
     parser.add_argument("--zip", action="store_true",
                         help="also write <stem>.zip with the image, JSON, "
-                             "CSVs and plot (as Save in digi.html)")
+                             "CSVs and plot (as Save in digitool.html)")
     parser.add_argument("--save-steps", action="store_true",
                         help="also write <stem>_crop.png and "
                              "<stem>_nogrid.png")
@@ -1399,7 +1399,7 @@ def main(argv=None):
     box = crop_box(image, full)
     print(f"Chart area [left, top, right, bottom]: {box}")
 
-    # Axes and labels with OCR (as digi.html: when axes are not set)
+    # Axes and labels with OCR (as digitool.html: when axes are not set)
     axes_set = all(isinstance(cfg.get(k), (int, float)) for k in AXES_KEYS)
     if not args.no_ocr and (args.ocr or not axes_set):
         try:
