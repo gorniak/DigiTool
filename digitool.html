@@ -571,7 +571,7 @@
 "use strict";
 
 // ============================================================================
-// Configuration Defaults & Constants (matching digi.py & digi_edit.py)
+// Configuration Defaults & Constants (matching digitool.py)
 // ============================================================================
 
 const DEFAULTS = {
@@ -1804,7 +1804,7 @@ function buildSavedConfig(cfg, tracesList, fileKeys) {
   return sorted;
 }
 
-// Formats JSON identically to digi.write_config()
+// Formats JSON identically to digitool.write_config()
 function serializeConfigJSON(cfgObj) {
   const lines = [];
   for (const [key, value] of Object.entries(cfgObj)) {
