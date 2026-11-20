@@ -1,0 +1,17 @@
+{
+  "color" : [0, 0, 0],
+  "min_x" : 0.0001,
+  "max_x" : 1,
+  "log_x" : true,
+  "grid_x" : [0.0001, 0.001, 0.01, 0.1, 1],
+  "min_y" : 0.2,
+  "max_y" : 1.2,
+  "log_y" : false,
+  "grid_y" : [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2],
+  "color_tolerance" : 10,
+  "gray_variance" : 10,
+  "trace_min_width" : 7,
+  "trace_min_span" : 0.1,
+  "trace_min_gap" : 7,
+  "traces" : ["-55oC", "25oC", "150oC"]
+}
