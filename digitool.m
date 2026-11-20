@@ -1,6 +1,6 @@
-function result = digi(image_name, varargin)
-%DIGI Digitize curves from a raster chart image into CSV data points.
-%   DIGI(IMAGE) digitizes the chart image IMAGE (PNG, JPG, ...) with the
+function result = digitool(image_name, varargin)
+%DIGITOOL Digitize curves from a raster chart image into CSV data points.
+%   DIGITOOL(IMAGE) digitizes the chart image IMAGE (PNG, JPG, ...) with the
 %   configuration <image stem>.json next to it (if it exists) and writes
 %   next to the image:
 %     <stem>.csv / <stem>_<trace>.csv   digitized points, "x;y" per line
@@ -10,7 +10,7 @@ function result = digi(image_name, varargin)
 %     <stem>.zip                        all of the above and the image
 %                                       (with 'zip', true)
 %
-%   MATLAB / GNU Octave port of digi.html (DigiTool web app): the same
+%   MATLAB / GNU Octave port of digitool.html (DigiTool web app): the same
 %   digitizing engine, axis / label OCR, CSV, JSON and plot outputs.
 %
 %   Axes missing in the configuration (min_x, max_x, min_y, max_y) are
@@ -19,7 +19,7 @@ function result = digi(image_name, varargin)
 %   from the configuration ("color" / "traces") or are picked from image
 %   pixels with 'pick'.
 %
-%   RESULT = DIGI(IMAGE, Name, Value, ...) returns a struct with the chart
+%   RESULT = DIGITOOL(IMAGE, Name, Value, ...) returns a struct with the chart
 %   area box ([left top right bottom], left/top 0-based, right/bottom
 %   exclusive), the configuration used and the traces (name, color and
 %   scaled x, y). Options:
@@ -38,9 +38,9 @@ function result = digi(image_name, varargin)
 %     'show'        show the plot in a window (default false)
 %
 %   Examples:
-%     digi('bjt_chart.png')
-%     digi('bjt_chart.png', 'pick', {400, 492, '-55oC'; 400, 668, '25oC'; 400, 964, '150oC'})
-%     digi('bjt_chart.png', 'ocr', true, 'save_config', true, 'zip', true)
+%     digitool('bjt_chart.png')
+%     digitool('bjt_chart.png', 'pick', {400, 492, '-55oC'; 400, 668, '25oC'; 400, 964, '150oC'})
+%     digitool('bjt_chart.png', 'ocr', true, 'save_config', true, 'zip', true)
 %
 %   Copyright 2023-2026 Radoslaw Gorniak
 %   Author  - Radoslaw Gorniak
@@ -48,7 +48,7 @@ function result = digi(image_name, varargin)
 %   Website - https://github.com/gorniak/DigiTool
 
   if nargin < 1 || isempty(image_name)
-    error('digi:usage', 'Usage: digi(''bjt_chart.png'', Name, Value, ...), see help digi');
+    error('digitool:usage', 'Usage: digitool(''bjt_chart.png'', Name, Value, ...), see help digitool');
   end
   if exist('OCTAVE_VERSION', 'builtin')
     try
@@ -63,13 +63,13 @@ function result = digi(image_name, varargin)
   for k = 1:2:numel(varargin)
     name = lower(varargin{k});
     if ~isfield(opt, name)
-      error('digi:option', 'Unknown option ''%s''', varargin{k});
+      error('digitool:option', 'Unknown option ''%s''', varargin{k});
     end
     opt.(name) = varargin{k + 1};
   end
 
   if ~exist(image_name, 'file')
-    error('digi:image', 'Image ''%s'' not found', image_name);
+    error('digitool:image', 'Image ''%s'' not found', image_name);
   end
   [img_dir, stem, ext] = fileparts(image_name);
   out_dir = opt.out;
@@ -106,7 +106,7 @@ function result = digi(image_name, varargin)
   box = crop_box(image, merge_struct(defaults(), cfg));
   fprintf('Chart area [left, top, right, bottom]: [%d, %d, %d, %d]\n', box);
 
-  % Axes and labels with OCR (as digi.html: when the axes are not set)
+  % Axes and labels with OCR (as digitool.html: when the axes are not set)
   axes_keys = {'min_x', 'max_x', 'min_y', 'max_y'};
   axes_set = true;
   for k = 1:numel(axes_keys)
@@ -196,7 +196,7 @@ function result = digi(image_name, varargin)
   full = merge_struct(defaults(), cfg);
   problem = axes_problem(full);
   if ~isempty(problem)
-    error('digi:axes', '%s', problem);
+    error('digitool:axes', '%s', problem);
   end
   result = struct('box', box, 'config', full, 'traces', ...
                   struct('name', {}, 'color', {}, 'x', {}, 'y', {}));
@@ -248,7 +248,7 @@ function result = digi(image_name, varargin)
 end
 
 % ============================================================================
-% Configuration defaults (as in digi.html)
+% Configuration defaults (as in digitool.html)
 % ============================================================================
 
 function d = defaults()
@@ -318,7 +318,7 @@ end
 % Core digitizing engine
 % ============================================================================
 
-% Round half to even (as Python round / pyRound in digi.html)
+% Round half to even (as Python round / pyRound in digitool.html)
 function r = py_round(x)
   f = floor(x);
   d = x - f;
@@ -1148,7 +1148,7 @@ function [p, e] = shortest_digits(x)
   e = str2double(t(strfind(t, 'e') + 1:end));
 end
 
-% Number as %.16g, written as digi.html (JavaScript) writes it
+% Number as %.16g, written as digitool.html (JavaScript) writes it
 function s = fmt_g16(v)
   if isnan(v)
     s = 'NaN';
@@ -1343,7 +1343,7 @@ function s = js_value(v)
   end
 end
 
-% JSON text formatted as digi.html (one key per line, one colored trace
+% JSON text formatted as digitool.html (one key per line, one colored trace
 % per line)
 function text = serialize_config(keys, vals)
   array_keys = {'crop', 'color', 'grid_x', 'grid_y'};
@@ -1427,7 +1427,7 @@ function [res, report] = detect_axes(im, box)
   res = struct();
   report = {};
   if left <= 1 && top <= 1 && right >= img_w - 1 && bottom >= img_h - 1
-    error('digi:ocr', 'chart area covers the whole image, no axis labels outside it to read');
+    error('digitool:ocr', 'chart area covers the whole image, no axis labels outside it to read');
   end
 
   % Chart area (grid, curves, annotations) painted white
@@ -1675,7 +1675,7 @@ function words = ocr_words(img, scale, rotate)
     'tesseract "%s" stdout --psm 11 -c preserve_interword_spaces=1 tsv 2>%s', file, nul));
   delete(file);
   if status ~= 0
-    error('digi:tesseract', 'tesseract failed (is it installed and on the PATH?)');
+    error('digitool:tesseract', 'tesseract failed (is it installed and on the PATH?)');
   end
   words = struct('text', {}, 'conf', {}, 'x0', {}, 'y0', {}, 'x1', {}, 'y1', {});
   rows = regexp(out, '\r?\n', 'split');
