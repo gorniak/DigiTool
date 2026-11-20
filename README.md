@@ -10,22 +10,25 @@ the tick labels with OCR.
 
 ![DigiTool](digitool.png)
 
+**Live demo:** [https://gorniak.eu/digitool/](https://gorniak.eu/digitool/)
+
 The same engine is available in three forms:
 
-| File        | Runs in                         | Use it for                                  |
-|-------------|---------------------------------|---------------------------------------------|
-| `digi.html`| any browser, no install         | interactive work: pick traces, adjust crop  |
-| `digi.py`   | Python 3 (numpy, Pillow)        | command line, scripts, batch, AI agents     |
-| `digi.m`    | MATLAB or GNU Octave            | MATLAB / Octave workflows                   |
+| File            | Runs in                         | Use it for                                  |
+|-----------------|---------------------------------|---------------------------------------------|
+| `digitool.html` | any browser, no install         | interactive work: pick traces, adjust crop  |
+| `digitool.py`   | Python 3 (numpy, Pillow)        | command line, scripts, batch, AI agents     |
+| `digitool.m`    | MATLAB or GNU Octave            | MATLAB / Octave workflows                   |
 
 All three read and write the same JSON configuration and produce the same CSV
 files, so you can set a chart up in the browser and re-run it from a script.
 
-## Web app (`digi.html`)
+## Web app (`digitool.html`)
 
-Open `digi.html` in a browser (or host it, e.g. on GitHub Pages). Everything
-runs locally in the page; only the OCR engine (Tesseract.js) is downloaded
-from a CDN the first time it is used.
+Try the live demo at [https://gorniak.eu/digitool/](https://gorniak.eu/digitool/),
+or open `digitool.html` locally in a browser (or host it, e.g. on GitHub Pages).
+Everything runs locally in the page; only the OCR engine (Tesseract.js) is
+downloaded from a CDN the first time it is used.
 
 1. Drop a chart image (and optionally its `.json` configuration) on the page.
 2. Check the chart area (green box) and the axes found by OCR.
@@ -33,7 +36,7 @@ from a CDN the first time it is used.
 4. **Save** downloads a ZIP with the image, `<name>.json`, the CSV files and
    `<name>_plot.png`.
 
-## Python (`digi.py`)
+## Python (`digitool.py`)
 
 ```sh
 pip install numpy pillow matplotlib      # matplotlib: plot PNG
@@ -43,11 +46,11 @@ pip install pytesseract scipy            # optional: OCR wrapper, speed
 ```
 
 ```sh
-python digi.py chart.png                         # config chart.json, or OCR + black trace
-python digi.py chart.png --pick 120 85 25oC --pick 140 160 150oC
-python digi.py chart.png --ocr --save-config     # re-read axes and labels, save JSON
-python digi.py chart.png --zip                   # as Save in the web app
-python digi.py -h                                # all options
+python digitool.py chart.png                         # config chart.json, or OCR + black trace
+python digitool.py chart.png --pick 120 85 25oC --pick 140 160 150oC
+python digitool.py chart.png --ocr --save-config     # re-read axes and labels, save JSON
+python digitool.py chart.png --zip                   # as Save in the web app
+python digitool.py -h                                # all options
 ```
 
 | Option                        | Meaning                                                           |
@@ -62,21 +65,21 @@ python digi.py -h                                # all options
 | `--save-steps`                | also write `<stem>_crop.png` and `<stem>_nogrid.png`              |
 | `--no-plot`, `--show`         | skip the plot PNG / show the plot in a window                     |
 
-`digi.py` can also be imported: `digitize(image, config, traces)`,
+`digitool.py` can also be imported: `digitize(image, config, traces)`,
 `detect_axes(image, box)`, `scale_points(...)`, `pick_color(image, x, y)`.
 
-## MATLAB / Octave (`digi.m`)
+## MATLAB / Octave (`digitool.m`)
 
 ```matlab
-digi('chart.png')
-digi('chart.png', 'pick', {120, 85, '25oC'; 140, 160, '150oC'})
-r = digi('chart.png', 'ocr', true, 'save_config', true, 'zip', true);
+digitool('chart.png')
+digitool('chart.png', 'pick', {120, 85, '25oC'; 140, 160, '150oC'})
+r = digitool('chart.png', 'ocr', true, 'save_config', true, 'zip', true);
 plot(r.traces(1).x, r.traces(1).y)
 ```
 
 Options: `'config'`, `'pick'`, `'crop'`, `'ocr'` (`'auto'`/`true`/`false`),
 `'out'`, `'save_config'`, `'zip'`, `'save_steps'`, `'plot'`, `'show'`. See
-`help digi`. Needs MATLAB R2016b+ or Octave 7+ (for `jsondecode`). The image
+`help digitool`. Needs MATLAB R2016b+ or Octave 7+ (for `jsondecode`). The image
 package / Image Processing Toolbox is used for speed when present; OCR needs
 the `tesseract` program on the `PATH`.
 
@@ -141,7 +144,7 @@ For `chart.png`:
 ## For AI agents
 
 See [SKILL.md](SKILL.md) for a step-by-step procedure for coding agents
-(Claude Code and others) to digitize charts with `digi.py`.
+(Claude Code and others) to digitize charts with `digitool.py`.
 
 ## License
 
