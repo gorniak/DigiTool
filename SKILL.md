@@ -1,11 +1,11 @@
 ---
 name: digitize-chart
-description: Extract numeric data (CSV x;y points) from a raster chart image such as a datasheet plot, scope capture or scanned graph, using DigiTool's digi.py. Use when the user wants the values of curves in a PNG/JPG chart, a chart cropped from a PDF, or a JSON configuration for DigiTool.
+description: Extract numeric data (CSV x;y points) from a raster chart image such as a datasheet plot, scope capture or scanned graph, using DigiTool's digitool.py. Use when the user wants the values of curves in a PNG/JPG chart, a chart cropped from a PDF, or a JSON configuration for DigiTool.
 ---
 
 # Digitize a chart image with DigiTool
 
-`digi.py` (in this directory) turns curves in a chart image into CSV files.
+`digitool.py` (in this directory) turns curves in a chart image into CSV files.
 It detects the chart area, removes the grid, follows each trace and scales
 pixels to values. Axes, log scales, title and axis labels come from OCR when
 the configuration does not set them.
@@ -30,7 +30,7 @@ tesseract --version || echo "OCR unavailable: set axes in the JSON by hand"
 2. **First run** (OCR fills the axes, a single black trace is assumed):
 
    ```sh
-   python3 digi.py chart.png
+   python3 digitool.py chart.png
    ```
 
    Read the printed lines `Chart area ...`, `OCR x: ...`, `OCR y: ...` and
@@ -54,7 +54,7 @@ tesseract --version || echo "OCR unavailable: set axes in the JSON by hand"
 4. **Re-run** and check:
 
    ```sh
-   python3 digi.py chart.png --save-config      # keep --pick options if used
+   python3 digitool.py chart.png --save-config      # keep --pick options if used
    ```
 
    - Each trace should have points across most of its visible length
@@ -89,8 +89,8 @@ tesseract --version || echo "OCR unavailable: set axes in the JSON by hand"
 - `<stem>.csv` (one unnamed trace) or `<stem>_<name>.csv`: lines `x;y`,
   semicolon separated, no header, sorted by x (by y with `swap_x_y`).
 - `<stem>_plot.png`: plot of the result, for checking.
-- `<stem>.json`: configuration, reusable by `digi.html` (web app) and
-  `digi.m` (MATLAB / Octave).
+- `<stem>.json`: configuration, reusable by `digitool.html` (web app) and
+  `digitool.m` (MATLAB / Octave).
 
 ## Notes
 
